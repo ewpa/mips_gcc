@@ -1,5 +1,7 @@
 #!/bin/bash 
 
+export enable_werror=no
+
 source include.sh
 
 #################
@@ -29,6 +31,15 @@ fi
 
 tar -xvjf $arch_name
 did_it_work $? 
+
+
+sed -i -e"s/subsection/section/g" $arch_dir/bfd/doc/elf.texi
+did_it_work $? 
+sed -i -e"s/@colophon/ATcolophon/g" $arch_dir/bfd/doc/bfd.texinfo
+did_it_work $? 
+sed -i -e"s/doc@cygnus/docATcygnus/g" $arch_dir/bfd/doc/bfd.texinfo
+did_it_work $? 
+
 
 cd $arch_dir
 did_it_work $? 

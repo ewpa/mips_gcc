@@ -6,8 +6,8 @@ source include.sh
 ### GCC #########
 #################
 
-ver_gcc=gcc-4.6.2
-arch_url=ftp://ftp.sunet.se/pub/gnu/gcc/releases/$ver_gcc/$ver_gcc.tar.bz2
+ver_gcc=gcc-4.8.5
+arch_url=ftp://ftp.gnu.org/gnu/gcc/$ver_gcc/$ver_gcc.tar.bz2
 arch_dir=$ver_gcc
 arch_name=$ver_gcc.tar.bz2
 
@@ -38,6 +38,7 @@ did_it_work $?
 cd build
 did_it_work $? 
 ../configure --target=arm-none-eabi  \
+             MAKEINFO=missing \
              --prefix=$TOOLPATH_STM32  \
              --enable-interwork  \
              --enable-multilib  \
@@ -65,7 +66,7 @@ did_it_work $?
 ## NewLib #######
 #################
 
-ver=newlib-1.20.0
+ver=newlib-2.2.0-1
 
 arch_url=ftp://sources.redhat.com/pub/newlib/$ver.tar.gz
 arch_dir=$ver
@@ -97,6 +98,8 @@ did_it_work $?
 cd build
 did_it_work $? 
 ../configure --target=arm-none-eabi  \
+             --enable-newlib-nano-malloc \
+             --enable-newlib-nano-formatted-io \
              --prefix=$TOOLPATH_STM32  \
              --enable-interwork  \
              --with-gnu-ld  \

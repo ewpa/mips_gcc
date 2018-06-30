@@ -1,5 +1,7 @@
 #!/bin/bash 
 
+export enable_werror=no
+
 source include.sh
 
 ver=binutils-2.22
@@ -8,10 +10,6 @@ arch_dir=$ver
 arch_name=$ver.tar.bz2
 
 cwd=`pwd`
-
-#First move the patch into the tools dir
-#cp patch/binutils-2.20_tc-arm.c.patch $stm_dir_tools/
-#did_it_work $? 
 
 cd $stm_dir_tools
 did_it_work $? 
@@ -31,13 +29,6 @@ fi
 
 tar -xvjf $arch_name
 did_it_work $? 
-
-#Get patch/patches and add them...
-#patch_file=binutils-2.20_tc-arm.c.patch
-#cp $cwd/patch/$patch_file . 
-#did_it_work $? 
-#patch $arch_dir/gas/config/tc-arm.c $patch_file
-#did_it_work $? 
 
 cd $arch_dir
 did_it_work $? 
