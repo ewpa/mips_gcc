@@ -5,7 +5,7 @@ source include.sh
 package_list="build-essential flex bison \
     libgmp3-dev libmpfr-dev autoconf \
     texinfo libncurses5-dev libexpat1 libexpat1-dev \
-    tk tk8.6 tk8.6-dev libmpc-dev"
+    tk tk8.6 tk8.6-dev libmpc-dev libc6-dev-mipsel-cross"
 
 #First check if we need to install anything?
 dpkg -L $package_list 2>&1 > /dev/null 

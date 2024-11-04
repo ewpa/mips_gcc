@@ -37,7 +37,7 @@ mkdir build
 did_it_work $? 
 cd build
 did_it_work $? 
-../configure --target=mipsel-sde-elf  \
+../configure --target=mipsel-linux  \
              --prefix=$TOOLPATH_STM32  \
              --enable-interwork  \
              --with-gnu-as  \

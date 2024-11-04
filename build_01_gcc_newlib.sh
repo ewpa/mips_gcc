@@ -6,10 +6,10 @@ source include.sh
 ### GCC #########
 #################
 
-ver_gcc=gcc-5.5.0
-arch_url=ftp://ftp.gnu.org/gnu/gcc/$ver_gcc/$ver_gcc.tar.xz
+ver_gcc=gcc-4.3.2
+arch_url=ftp://ftp.gnu.org/gnu/gcc/$ver_gcc/$ver_gcc.tar.bz2
 arch_dir=$ver_gcc
-arch_name=$ver_gcc.tar.xz
+arch_name=$ver_gcc.tar.bz2
 
 cd $stm_dir_tools
 did_it_work $? 
@@ -27,29 +27,39 @@ if [ -d $arch_dir ]; then
     did_it_work $? 
 fi
 
-xzcat -T`getconf _NPROCESSORS_ONLN` $arch_name | tar -xvf -
+tar -xvjf $arch_name
 did_it_work $? 
 
 cd $arch_dir
 did_it_work $? 
 
+# https://gcc.gnu.org/pipermail/gcc-patches/2023-August/627243.html
 sed -i gcc/reload.h -e"s/bool x_spill_indirect_levels/unsigned char x_spill_indirect_levels/"
+did_it_work $?
+# https://stackoverflow.com/questions/26375445/error-compiling-gcc-3-4-6-in-ubuntu-14-04
+sed -i gcc/config/mips/linux-unwind.h -e"s/struct siginfo/siginfo_t/"
 did_it_work $?
 
 mkdir build
 did_it_work $? 
 cd build
 did_it_work $? 
-../configure --target=mipsel-sde-elf  \
+# https://gcc.gnu.org/install/configure.html
+# https://unix.stackexchange.com/questions/219708/arch-compiling-toplev-o-fails-in-gcc-install
+../configure --target=mipsel-linux  \
+             CFLAGS="-fgnu89-inline" \
+             CXXFLAGS="-fgnu89-inline" \
              MAKEINFO=missing \
              --prefix=$TOOLPATH_STM32  \
              --enable-interwork  \
              --enable-languages="c,c++"  \
-             --with-newlib  \
-             --without-headers  \
+             --with-headers=/usr/mipsel-linux-gnu/include \
+             --with-libs=/usr/mipsel-linux-gnu/lib \
              --disable-shared  \
              --with-gnu-as  \
-             --with-float=soft \
+             --with-float=hard \
+             --with-cpu-32=4kc \
+             --with-tune-32=4kc \
              --disable-libssp \
              --with-gnu-ld \
              --with-system-zlib 
@@ -96,7 +106,7 @@ mkdir build
 did_it_work $? 
 cd build
 did_it_work $? 
-../configure --target=mipsel-sde-elf  \
+../configure --target=mipsel-linux  \
              --enable-newlib-nano-malloc \
              --enable-newlib-nano-formatted-io \
              --prefix=$TOOLPATH_STM32  \
@@ -153,10 +163,7 @@ cd $stm_dir_tools
 did_it_work $? 
 cd $ver_gcc/build
 did_it_work $? 
-make $PARALLEL CFLAGS="" \
-     CXXFLAGS="" \
-     LIBCXXFLAGS="" \
-     all 
+make $PARALLEL all
 did_it_work $? 
 
 make install 

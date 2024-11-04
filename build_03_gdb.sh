@@ -36,7 +36,7 @@ mkdir build
 did_it_work $? 
 cd build
 did_it_work $? 
-../configure --target=mipsel-sde-elf \
+../configure --target=mipsel-linux \
                       --prefix=$TOOLPATH_STM32  \
                       --enable-languages=c,c++ \
                       --enable-interwork \
@@ -54,18 +54,18 @@ did_it_work $?
 
 cd $TOOLPATH_STM32/bin
 did_it_work $? 
-mv mipsel-sde-elf-gdb    mipsel-sde-elf-gdb-$gdb_ver
+mv mipsel-linux-gdb    mipsel-linux-gdb-$gdb_ver
 did_it_work $? 
-mv mipsel-sde-elf-gdbtui mipsel-sde-elf-gdbtui-$gdb_ver
+mv mipsel-linux-gdbtui mipsel-linux-gdbtui-$gdb_ver
 did_it_work $? 
-mv mipsel-sde-elf-run    mipsel-sde-elf-run-$gdb_ver
+mv mipsel-linux-run    mipsel-linux-run-$gdb_ver
 did_it_work $? 
 
-ln -s mipsel-sde-elf-gdb-$gdb_ver    mipsel-sde-elf-gdb
+ln -s mipsel-linux-gdb-$gdb_ver    mipsel-linux-gdb
 did_it_work $? 
-ln -s mipsel-sde-elf-gdbtui-$gdb_ver mipsel-sde-elf-gdbtui
+ln -s mipsel-linux-gdbtui-$gdb_ver mipsel-linux-gdbtui
 did_it_work $? 
-ln -s mipsel-sde-elf-run-$gdb_ver    mipsel-sde-elf-run
+ln -s mipsel-linux-run-$gdb_ver    mipsel-linux-run
 did_it_work $? 
 
 
