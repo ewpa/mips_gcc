@@ -5,10 +5,10 @@ source include.sh
 #################
 ### gdb #########
 #################
-gdb_ver=7.2a
-arch_url=http://ftp.gnu.org/gnu/gdb/gdb-$gdb_ver.tar.bz2
-arch_dir=gdb-7.2
-arch_name=gdb-$gdb_ver.tar.bz2
+gdb_ver=8.3.1
+arch_url=http://ftp.gnu.org/gnu/gdb/gdb-$gdb_ver.tar.xz
+arch_dir=gdb-8.3.1
+arch_name=gdb-$gdb_ver.tar.xz
 
 cd $stm_dir_tools
 did_it_work $? 
@@ -26,7 +26,7 @@ if [ -d $arch_dir ]; then
     did_it_work $? 
 fi
 
-tar -xvjf $arch_name
+xzcat -T`getconf _NPROCESSORS_ONLN` $arch_name | tar -xvf -
 did_it_work $? 
 
 cd $arch_dir
@@ -36,12 +36,10 @@ mkdir build
 did_it_work $? 
 cd build
 did_it_work $? 
-../configure --target=arm-none-eabi \
+../configure --target=mipsel-sde-elf \
                       --prefix=$TOOLPATH_STM32  \
                       --enable-languages=c,c++ \
-                      --enable-thumb \
                       --enable-interwork \
-                      --enable-multilib \
                       --enable-tui \
                       --with-newlib \
                       --disable-werror \
@@ -56,18 +54,18 @@ did_it_work $?
 
 cd $TOOLPATH_STM32/bin
 did_it_work $? 
-mv arm-none-eabi-gdb    arm-none-eabi-gdb-$gdb_ver
+mv mipsel-sde-elf-gdb    mipsel-sde-elf-gdb-$gdb_ver
 did_it_work $? 
-mv arm-none-eabi-gdbtui arm-none-eabi-gdbtui-$gdb_ver
+mv mipsel-sde-elf-gdbtui mipsel-sde-elf-gdbtui-$gdb_ver
 did_it_work $? 
-mv arm-none-eabi-run    arm-none-eabi-run-$gdb_ver
+mv mipsel-sde-elf-run    mipsel-sde-elf-run-$gdb_ver
 did_it_work $? 
 
-ln -s arm-none-eabi-gdb-$gdb_ver    arm-none-eabi-gdb
+ln -s mipsel-sde-elf-gdb-$gdb_ver    mipsel-sde-elf-gdb
 did_it_work $? 
-ln -s arm-none-eabi-gdbtui-$gdb_ver arm-none-eabi-gdbtui
+ln -s mipsel-sde-elf-gdbtui-$gdb_ver mipsel-sde-elf-gdbtui
 did_it_work $? 
-ln -s arm-none-eabi-run-$gdb_ver    arm-none-eabi-run
+ln -s mipsel-sde-elf-run-$gdb_ver    mipsel-sde-elf-run
 did_it_work $? 
 
 

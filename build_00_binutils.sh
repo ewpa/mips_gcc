@@ -37,10 +37,9 @@ mkdir build
 did_it_work $? 
 cd build
 did_it_work $? 
-../configure --target=arm-none-eabi  \
+../configure --target=mipsel-sde-elf  \
              --prefix=$TOOLPATH_STM32  \
              --enable-interwork  \
-             --enable-multilib  \
              --with-gnu-as  \
              --with-gnu-ld  \
              --disable-nls 

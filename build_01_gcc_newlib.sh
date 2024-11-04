@@ -6,10 +6,10 @@ source include.sh
 ### GCC #########
 #################
 
-ver_gcc=gcc-4.8.5
-arch_url=ftp://ftp.gnu.org/gnu/gcc/$ver_gcc/$ver_gcc.tar.bz2
+ver_gcc=gcc-5.5.0
+arch_url=ftp://ftp.gnu.org/gnu/gcc/$ver_gcc/$ver_gcc.tar.xz
 arch_dir=$ver_gcc
-arch_name=$ver_gcc.tar.bz2
+arch_name=$ver_gcc.tar.xz
 
 cd $stm_dir_tools
 did_it_work $? 
@@ -27,30 +27,29 @@ if [ -d $arch_dir ]; then
     did_it_work $? 
 fi
 
-tar -xvjf $arch_name
+xzcat -T`getconf _NPROCESSORS_ONLN` $arch_name | tar -xvf -
 did_it_work $? 
 
 cd $arch_dir
 did_it_work $? 
 
+sed -i gcc/reload.h -e"s/bool x_spill_indirect_levels/unsigned char x_spill_indirect_levels/"
+did_it_work $?
+
 mkdir build
 did_it_work $? 
 cd build
 did_it_work $? 
-../configure --target=arm-none-eabi  \
+../configure --target=mipsel-sde-elf  \
              MAKEINFO=missing \
              --prefix=$TOOLPATH_STM32  \
              --enable-interwork  \
-             --enable-multilib  \
              --enable-languages="c,c++"  \
              --with-newlib  \
              --without-headers  \
              --disable-shared  \
              --with-gnu-as  \
              --with-float=soft \
-             --with-cpu=cortex-m3 \
-             --with-tune=cortex-m3 \
-             --with-mode=thumb \
              --disable-libssp \
              --with-gnu-ld \
              --with-system-zlib 
@@ -66,9 +65,9 @@ did_it_work $?
 ## NewLib #######
 #################
 
-ver=newlib-2.2.0-1
+ver=newlib-2.2.0.20151023
 
-arch_url=ftp://sources.redhat.com/pub/newlib/$ver.tar.gz
+arch_url=ftp://sourceware.org/pub/newlib/$ver.tar.gz
 arch_dir=$ver
 arch_name=$ver.tar.gz
 
@@ -97,7 +96,7 @@ mkdir build
 did_it_work $? 
 cd build
 did_it_work $? 
-../configure --target=arm-none-eabi  \
+../configure --target=mipsel-sde-elf  \
              --enable-newlib-nano-malloc \
              --enable-newlib-nano-formatted-io \
              --prefix=$TOOLPATH_STM32  \
@@ -138,16 +137,8 @@ make $PARALLEL CFLAGS_FOR_TARGET="-ffunction-sections \
                         -D__OPTIMIZE_SIZE__ \
                         -Os \
                         -fomit-frame-pointer \
-                        -mcpu=cortex-m3 \
-                        -mthumb \
-                        -mfix-cortex-m3-ldrd \
-                        -mfloat-abi=softfp \
-                        -D__thumb2__ \
                         -D__BUFSIZ__=256" \
-               CCASFLAGS="-mcpu=cortex-m3 \
-                          -mthumb \
-                          -mfix-cortex-m3-ldrd \
-                          -D__thumb2__" 
+               CCASFLAGS=""
 did_it_work $? 
 
 make install 
@@ -162,9 +153,9 @@ cd $stm_dir_tools
 did_it_work $? 
 cd $ver_gcc/build
 did_it_work $? 
-make $PARALLEL CFLAGS="-mcpu=cortex-m3 -mthumb" \
-     CXXFLAGS="-mcpu=cortex-m3 -mthumb" \
-     LIBCXXFLAGS="-mcpu=cortex-m3 -mthumb" \
+make $PARALLEL CFLAGS="" \
+     CXXFLAGS="" \
+     LIBCXXFLAGS="" \
      all 
 did_it_work $? 
 
