@@ -6,7 +6,7 @@ source include.sh
 ### GCC #########
 #################
 
-ver_gcc=gcc-4.3.2
+ver_gcc=gcc-3.4.6
 arch_url=ftp://ftp.gnu.org/gnu/gcc/$ver_gcc/$ver_gcc.tar.bz2
 arch_dir=$ver_gcc
 arch_name=$ver_gcc.tar.bz2
@@ -37,7 +37,7 @@ did_it_work $?
 sed -i gcc/reload.h -e"s/bool x_spill_indirect_levels/unsigned char x_spill_indirect_levels/"
 did_it_work $?
 # https://stackoverflow.com/questions/26375445/error-compiling-gcc-3-4-6-in-ubuntu-14-04
-sed -i gcc/config/mips/linux-unwind.h -e"s/struct siginfo/siginfo_t/"
+sed -i gcc/config/mips/linux.h -e"s/struct siginfo/siginfo_t/"
 did_it_work $?
 
 mkdir build
@@ -47,9 +47,6 @@ did_it_work $?
 # https://gcc.gnu.org/install/configure.html
 # https://unix.stackexchange.com/questions/219708/arch-compiling-toplev-o-fails-in-gcc-install
 ../configure --target=mipsel-linux  \
-             CFLAGS="-fgnu89-inline" \
-             CXXFLAGS="-fgnu89-inline" \
-             MAKEINFO=missing \
              --prefix=$TOOLPATH_STM32  \
              --enable-interwork  \
              --enable-languages="c,c++"  \
